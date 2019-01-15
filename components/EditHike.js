@@ -1,110 +1,109 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Card, Rating, FormLabel, FormInput, Button } from 'react-native-elements';
-import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
-import { ratedRecording,
-    savedRecording,
-    recordingTitleChanged,
-    recordingDescriptionChanged,
-    uploadTrackSnapshot } from '../actions';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Card, Rating, FormLabel, FormInput, Button} from "react-native-elements";
+
+import { connect } from "react-redux";
+import { Actions } from "react-native-router-flux";
+
+import { hikeUpdated, hikeRemoved } from "../actions";
 
 class EditHike extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+    const {rating, title, description} = this.props.track;
+    this.state = {rating, title, description};
+  }
 
-    render() {
-        return (
-            <View style={{flex: 1}}>
-                <Card>
-                    <Rating 
-                        type='star'
-                        fractions={0}
-                        startingValue={0}
-                        onFinishRating={this.onRatedRecording}
-                    />
-                    <FormLabel>Title</FormLabel>
-                    <FormInput
-                        onChangeText={this.onChangeTitle}
-                        containerStyle={styles.input}>
-                        {this.props.title}
-                    </FormInput>
-                    <FormLabel>Description</FormLabel>
-                    <FormInput
-                        onChangeText={this.onChangeDescription}
-                        containerStyle={styles.input}>
-                        {this.props.description}
-                    </FormInput>
-                    <Button
-                        title='Save'
-                        onPress={this.onSaveRecording}
-                    />
-                </Card>
-            </View>
-        );
-    };
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Card>
+          <Rating
+            showRating
+            type="star"
+            fractions={0}
+            startingValue={this.state.rating}
+            onFinishRating={this.onChangeRating}
+          />
+          <FormLabel>Title</FormLabel>
+          <FormInput
+            onChangeText={this.onChangeTitle}
+            containerStyle={styles.input}
+          >
+            {this.state.title}
+          </FormInput>
+          <FormLabel>Description</FormLabel>
+          <FormInput
+            onChangeText={this.onChangeDescription}
+            containerStyle={styles.input}
+          >
+            {this.state.description}
+          </FormInput>
+          
+          <View style={{flexDirection: "row", justifyContent: "center"}}>
+            <Button
+              backgroundColor="green"
+              title="Save"
+              onPress={this.onSaveRecording}
+            />
+            {this.renderDeleteButton()}
+          </View>
+        </Card>
+      </View>
+    );
+  }
 
-    onChangeTitle = (title) => {
-        this.props.recordingTitleChanged(title);
-    };
-    
-    onChangeDescription = (description) => {
-        this.props.recordingDescriptionChanged(description);
-    };
-    
-    onSaveRecording = () => {
-        const {
-            locations, 
-            title, 
-            description, 
-            rating,
-            snapshot
-        } = this.props;
+  onRemoveHike = () => {
+    const {track} = this.props;
 
-        this.props.savedRecording(locations, rating, title, description, snapshot);
+    this.props.hikeRemoved(track).then(() => {
+      Actions.reset("home");
+      Actions.jump("myHikes");
+    });
+  }
 
-        Actions.reset('home');
-    }
-    
-    onRatedRecording = (rating) => {
-        console.log('User rated track: ' + rating);
-        this.props.ratedRecording(rating);
-    };
-};
+  renderDeleteButton = () => {
+    return (
+      <Button
+        backgroundColor="red"
+        title="Delete"
+        onPress={this.onRemoveHike}
+      />
+    );
+  };
+
+  onChangeTitle = title => {
+    this.setState({title});
+  };
+
+  onChangeDescription = description => {
+    this.setState({description});
+  };
+
+  onChangeRating = rating => {
+    this.setState({rating});
+  };
+
+  onSaveRecording = () => {
+    const {rating, title, description} = this.state;
+    const track = {...this.props.track, rating, title, description};
+
+    this.props.hikeUpdated(track).then(() => {
+      Actions.reset("home");
+      Actions.jump("myHikes");
+    })
+  };
+}
 
 const styles = StyleSheet.create({
-    input: {
-        borderBottomWidth: 1,
-        marginBottom: 10
-    }
+  input: {
+    borderBottomWidth: 1,
+    marginBottom: 10
+  }
 });
 
 const mapStateToProps = (state) => {
-    const { 
-        locations,
-        title, 
-        description, 
-        rating,
-        snapshot
-    } = state.recorder;
-
-    return {
-        locations: locations,
-        title: title,
-        description: description,
-        rating: rating,
-        snapshot: snapshot
-    };
+  return {track: state.scene.track};
 };
 
-export default connect(
-    mapStateToProps, 
-    {
-        ratedRecording, 
-        savedRecording,
-        recordingTitleChanged,
-        recordingDescriptionChanged,
-        uploadTrackSnapshot
-    }
-    ) (EditHike);
+export default connect(mapStateToProps, {hikeUpdated, hikeRemoved})(EditHike);

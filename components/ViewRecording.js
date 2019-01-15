@@ -1,61 +1,74 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { Card, Rating } from 'react-native-elements';
+import React from "react";
+import { View, Text } from "react-native";
+import { Card } from "react-native-elements";
+import StarRating from "./common/StarRating";
+import { connect } from "react-redux";
 
 class ViewRecording extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    msToTimeString = (duration) => {
-        const seconds = Math.floor((duration / 1000)) % 60;
-        const minutes = Math.floor((duration / (1000 * 60))) % 60;
-        const hours = Math.floor((duration / (1000 * 60 * 60))) % 24;
-        const days = Math.floor((duration / (1000 * 60 * 60 * 24)));
-        
-        const D = (days > 0) ? days + ' days, ' : '';
+  msToTimeString = duration => {
+    const seconds = Math.floor(duration / 1000) % 60;
+    const minutes = Math.floor(duration / (1000 * 60)) % 60;
+    const hours = Math.floor(duration / (1000 * 60 * 60)) % 24;
+    const days = Math.floor(duration / (1000 * 60 * 60 * 24));
 
-        return D + hours + ':' + minutes + ':' + seconds;
-    }
+    const D = days > 0 ? days + " days, " : "";
 
-    render() {
-        const track = this.props.track;
-        const distance = Number.parseFloat(track.stats.distance).toPrecision(2) + ' km';
-        const elevation = Number.parseFloat(track.stats.elevation).toPrecision(2) + ' m';
-        const time = this.msToTimeString(track.stats.time);
+    return D + hours + ":" + minutes + ":" + seconds;
+  };
 
-        return (
-            <View style={{flex: 1}}>
-                <Card
-                    key={track.key} 
-                    image={{uri: track.snapshotURL}}
-                    imageProps={{resizeMode: 'cover'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 18}}>{track.title}</Text>
-                    <Rating
-                        imageSize={14}
-                        type='star'
-                        fractions={0}
-                        readonly
-                        startingValue={track.rating}
-                    />
-                    <Text>{track.stats.date}</Text>
-                </Card>
+  render() {
+    const { track } = this.props;
+    const { id, snapshotURL, rating, stats } = track;
+    const distance =
+      Number.parseFloat(track.stats.distance).toPrecision(2) + " km";
+    const elevation =
+      Number.parseFloat(track.stats.elevation).toPrecision(2) + " m";
+    const time = this.msToTimeString(track.stats.time);
 
-                <Card title='Stats'>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text>Distance: {distance}</Text>
-                        <Text>Elevation gain: {elevation}</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text>Total time: {time}</Text>
-                    </View>
-                </Card>
+    return (
+      <View style={{ flex: 1 }}>
+        <Card
+          key={id}
+          image={{ uri: snapshotURL }}
+          imageProps={{ resizeMode: "cover" }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+            {track.title}
+          </Text>
+          <Text>{stats.date}</Text>
+          <StarRating rating={rating} />
+        </Card>
 
-                <Card title='Photos'></Card>
-            </View>
-        );
-    }
+        <Card title="Stats">
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text>Distance: {distance}</Text>
+            <Text>Elevation gain: {elevation}</Text>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text>Total time: {time}</Text>
+          </View>
+        </Card>
 
+        <Card title="Photos" />
+      </View>
+    );
+  }
 }
 
-export default ViewRecording;
+const mapStateToProps = state => {
+  const { track } = state.scene;
+  return { track };
+};
+
+export default connect(
+  mapStateToProps,
+  {}
+)(ViewRecording);

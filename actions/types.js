@@ -30,4 +30,11 @@ export const STATS_UPDATED = 'stats_updated';
 
 // Hike actions
 export const HIKE_ADDED = 'hike_added';
+export const HIKES_FETCH_STARTED = 'hikes_fetch_started';
+export const HIKES_FETCH_ERROR = 'hikes_fetch_error';
 export const HIKES_FETCHED = 'hikes_fetched';
+export const HIKE_REMOVED = 'hike_removed';
+export const HIKE_UPDATED = 'hike_updated';
+
+// Scene actions
+export const TRACK_SELECTED = 'track_selected';

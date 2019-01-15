@@ -67,7 +67,6 @@ const loginSuccess = (dispatch, user) => {
 
 const signupSucess = (dispatch, user) => {
 
-    
     dispatch({
         type: LOGIN_USER_SUCCESS,
         payload: user

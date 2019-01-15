@@ -2,6 +2,7 @@ import React from "react";
 import {
   View,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ActivityIndicator,
   Text,
   StyleSheet
@@ -10,7 +11,7 @@ import { Icon } from "react-native-elements";
 import { connect } from "react-redux";
 import { Actions } from "react-native-router-flux";
 import { Stopwatch } from 'react-native-stopwatch-timer';
-import { Location, Permissions, TaskManager, MapView, takeSnapshotAsync } from "expo";
+import { Location, Permissions, MapView, takeSnapshotAsync } from "expo";
 
 import {
   recorderStarted,
@@ -23,49 +24,31 @@ import {
   updateStats
 } from "../actions";
 
-import { store } from '../App';
-
-const LOCATION_TASK_NAME = 'background-location-task';
-
-TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
-  if (error) {
-    console.log(error.message);
-    return;
-  }
-  if (data) {
-    const {locations} = data;
-    const newLocation = locations[locations.length-1];
-    store.dispatch(recordedLocation(newLocation));
-    store.dispatch(updateStats(store.getState().recorder.locations));
-  }
-});
+const LOCATION_TASK_NAME = "background-location-task";
 
 class Recorder extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      locationEnabled: undefined,
+    }
   }
 
   componentDidMount() {
-    Permissions.askAsync(Permissions.LOCATION).then(result => {
-      const { status } = result;
-
-      if (status === "granted") {
-        Location.getCurrentPositionAsync({})
-          .then(location => {
-            this.props.locationChanged(location.coords);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+    this.checkForLocationServices().then(() => {
+      if (this.state.locationEnabled) {
+        this.watchPosition();
       }
     });
   }
 
-  // componentWillUnmount() {
-  //     BackgroundGeolocation.stop();
-  //     BackgroundGeolocation.events.forEach(event => BackgroundGeolocation.removeAllListeners(event));
-  // }
+  watchPosition = () => {
+    Location.watchPositionAsync({
+      accuracy: Location.Accuracy.High
+    },(location) => this.props.locationChanged(location.coords));
+  }
 
   onPressStart = () => {
     const options = {
@@ -86,15 +69,16 @@ class Recorder extends React.Component {
   };
 
   onPressDiscard = () => {
-    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
-      if (started) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
-          this.props.recorderReset();
-        });
-      } else {
-        this.props.recorderReset();
-      }
-    });
+    // Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
+    //   if (started) {
+    //     Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
+    //       this.props.recorderReset();
+    //     });
+    //   } else {
+    //     this.props.recorderReset();
+    //   }
+    // });
+    this.props.recorderReset();
   };
 
   onPressSave = () => {
@@ -109,8 +93,11 @@ class Recorder extends React.Component {
     });
 
     this.takeSnapshot().then((uri) => {
-      this.props.snapshotTaken(uri);
-      Actions.push('editHike');
+      const recording = {
+        locations: this.props.locations,
+        snapshot: uri
+      };
+      Actions.saveRecording({recording});
     });
   };
 
@@ -252,6 +239,7 @@ class Recorder extends React.Component {
   };
 
   renderReactNativeMap = () => {
+
     return (
       <MapView
         ref={map => {
@@ -280,7 +268,46 @@ class Recorder extends React.Component {
     );
   };
 
+  checkForLocationServices = () => {
+    return Location.hasServicesEnabledAsync().then((enabled) => {
+      this.setState({locationEnabled: enabled});
+    });
+  }
+
+  getCurrentLocation = () => {
+    Permissions.askAsync(Permissions.LOCATION).then(result => {
+      const { status } = result;
+
+      if (status === "granted") {
+        this.checkForLocationServices().then(() => {
+          if (this.state.locationEnabled) {
+            this.watchPosition();
+          }
+        });
+      }
+    });
+  }
+
   render() {
+    if (!this.state.locationEnabled) {
+      return (
+        <TouchableWithoutFeedback onPress={this.getCurrentLocation}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "space-around",
+              alignContent: "center"
+            }}>
+            <Text style={{marginHorizontal: 10}}>
+              Location services must be turned on to record a hike.
+              Turn on location services, then tap anywhere to try again.
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      )
+    }
+
     const long = this.props.coords.longitude;
     const lat = this.props.coords.latitude;
 
@@ -340,7 +367,8 @@ const mapStateToProps = state => {
     recordingStarted,
     locations,
     latlngs,
-    stats
+    stats,
+    snapshot
   } = state.recorder;
 
   return {
@@ -349,7 +377,8 @@ const mapStateToProps = state => {
     recordingStarted: recordingStarted,
     locations: locations,
     latlngs: latlngs,
-    stats: stats
+    stats: stats,
+    snapshot: snapshot
   };
 };
 

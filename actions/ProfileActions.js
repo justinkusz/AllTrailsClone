@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-import { uploadProfilePicture } from './FileUploadActions';
+import { uploadProfilePicture } from '../lib/FileUpload';
 
 import { PROFILE_PHOTO_URL_UPDATED,
     FIRST_NAME_CHANGED,
