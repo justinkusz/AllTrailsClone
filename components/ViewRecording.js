@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Card } from "react-native-elements";
 import StarRating from "./common/StarRating";
 import { connect } from "react-redux";
@@ -30,7 +30,7 @@ class ViewRecording extends React.Component {
     const time = this.msToTimeString(track.stats.time);
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView>
         <Card
           key={id}
           image={{ uri: snapshotURL }}
@@ -41,6 +41,10 @@ class ViewRecording extends React.Component {
           </Text>
           <Text>{stats.date}</Text>
           <StarRating rating={rating} />
+        </Card>
+
+        <Card title="Description">
+          <Text>{track.description}</Text>
         </Card>
 
         <Card title="Stats">
@@ -58,7 +62,7 @@ class ViewRecording extends React.Component {
         </Card>
 
         <Card title="Photos" />
-      </View>
+      </ScrollView>
     );
   }
 }
