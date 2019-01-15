@@ -8,9 +8,9 @@ import {
   StyleSheet
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { Stopwatch } from 'react-native-stopwatch-timer';
 import { connect } from "react-redux";
 import { Actions } from "react-native-router-flux";
-import { Stopwatch } from 'react-native-stopwatch-timer';
 import { Location, Permissions, MapView, takeSnapshotAsync } from "expo";
 
 import {
@@ -69,26 +69,18 @@ class Recorder extends React.Component {
   };
 
   onPressDiscard = () => {
-    // Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
-    //   if (started) {
-    //     Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
-    //       this.props.recorderReset();
-    //     });
-    //   } else {
-    //     this.props.recorderReset();
-    //   }
-    // });
+    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
+      if (started) {
+        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      }
+    });
     this.props.recorderReset();
   };
 
   onPressSave = () => {
     Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
       if (started) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
-          // this.props.savedRecording(this.props.locations);
-        });
-      } else {
-        // this.props.savedRecording(this.props.locations);
+        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
       }
     });
 
@@ -161,14 +153,14 @@ class Recorder extends React.Component {
           color: '#FFF'
         }
     };
-    // return (
-    //     <Stopwatch
-    //         start={this.props.recording}
-    //         reset={!this.props.recordingStarted}
-    //         options={options}
-    //         // getTime={(time) => console.log(time)}
-    //     />
-    // );
+    return (
+        <Stopwatch
+            start={this.props.recording}
+            reset={!this.props.recordingStarted}
+            options={options}
+            getTime={(time) => console.log(time)}
+        />
+    );
   };
 
   renderDistance = () => {
