@@ -4,7 +4,7 @@ import { Card, Rating, FormLabel, FormInput, Button } from "react-native-element
 import { Actions } from "react-native-router-flux";
 import { connect } from 'react-redux';
 import { saveRecording, updateLifetimeStats } from '../lib/Recording';
-import { hikeAdded, statsChanged } from '../actions';
+import { hikeAdded, statsChanged, recorderReset } from '../actions';
 
 class SaveRecording extends React.Component {
   constructor(props) {
@@ -100,9 +100,10 @@ class SaveRecording extends React.Component {
       updateLifetimeStats(track.stats).then((stats) => {
         this.props.statsChanged(stats);
       }).then(() => {
+        this.props.recorderReset();
         Actions.reset("home");
         Actions.jump("myHikes");
-      })
+      });
     });
   };
 }
@@ -114,4 +115,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(undefined, {hikeAdded, statsChanged})(SaveRecording);
+export default connect(undefined, {hikeAdded, statsChanged, recorderReset})(SaveRecording);
