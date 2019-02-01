@@ -45,14 +45,18 @@ class Recorder extends React.Component {
   }
 
   watchPosition = () => {
-    Location.watchPositionAsync({
-      accuracy: Location.Accuracy.High
-    },(location) => this.props.locationChanged(location.coords));
+    const options = {
+      accuracy: Location.Accuracy.Highest,
+      distanceInterval: 10
+    };
+    
+    Location.watchPositionAsync(options, (location) => this.props.locationChanged(location.coords));
   }
 
   onPressStart = () => {
     const options = {
-      accuracy: Location.Accuracy.High
+      accuracy: Location.Accuracy.Highest,
+      distanceInterval: 10
     };
 
     Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
@@ -158,7 +162,7 @@ class Recorder extends React.Component {
             start={this.props.recording}
             reset={!this.props.recordingStarted}
             options={options}
-            getTime={(time) => console.log(time)}
+            getTime={(time) => {}}
         />
     );
   };
