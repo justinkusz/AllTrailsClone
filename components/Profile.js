@@ -14,15 +14,18 @@ class Profile extends React.Component {
         const hours = Math.floor((duration / (1000 * 60 * 60))) % 24;
         const days = Math.floor((duration / (1000 * 60 * 60 * 24)));
         
-        const D = (days > 0) ? days + ' days, ' : '';
+        const D = (days > 0) ? days + ' days ' : '';
+        const H = (hours > 0) ? hours + ' hr ' : '';
+        const M = (minutes > 0) ? minutes + ' min ' : '';
+        const S = (seconds > 0) ? seconds + ' sec' : '';
 
-        return D + hours + ':' + minutes + ':' + seconds;
+        return D + H + M + S;
     }
 
     renderStatsCard = () => {
         const hikes = this.props.userStats.hikes;
         const distance = Number.parseFloat(this.props.userStats.distance).toPrecision(2) + ' km';
-        const elevation = Number.parseFloat(this.props.userStats.elevation).toPrecision(2) + ' m';
+        const elevation = Number.parseInt(this.props.userStats.elevation) + ' m';
         const time = this.msToTimeString(this.props.userStats.time);
 
         return (
