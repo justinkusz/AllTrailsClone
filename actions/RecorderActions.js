@@ -65,9 +65,19 @@ export const snapshotTaken = (uri) => {
 };
 
 export const updateStats = (locations) => {
-    const distance = haversine(locations);
-    const time = locations[locations.length-1].timestamp - locations[0].timestamp;
-    const rate = Number.parseFloat((time / (1000 * 60)) / distance).toPrecision(1);
+    var distance;
+    var time;
+    var rate;
+
+    if (locations.length < 2) {
+        distance = 0;
+        time = 0;
+        rate = 0;
+    } else {
+        distance = haversine(locations);
+        time = locations[locations.length-1].timestamp - locations[0].timestamp;
+        rate = Number.parseFloat(((time || 0) / (1000 * 60)) / distance).toPrecision(2);
+    }
 
     const stats = {
         distance: Number.parseFloat(distance).toPrecision(2),
