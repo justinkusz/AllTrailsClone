@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import combineReducers from './reducers';
-import  RouterComponent from './RouterComponent';
+import RouterComponent from './RouterComponent';
 import firebase from 'firebase';
 import { TaskManager } from 'expo';
 
