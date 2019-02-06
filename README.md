@@ -22,6 +22,7 @@ This project was started primarily as an excuse for me to learn React Native, in
 
 * Planned:
 	* Taking geo-tagged images associated with the hike
+	* Adding waypoints/points of interest to hike recording
 	* Sharing hike recordings via the web/social media/etc
 	* Following other users of the app to easily see their shared recordings/reviews/photos/etc
 	* A way to search for hikes/trails in a given area
