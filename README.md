@@ -10,7 +10,7 @@ MyTrails was inspired by [AllTrails](https://www.alltrails.com/), an app availab
 
 (If you're an AllTrails user, feel free to [follow me](https://www.alltrails.com/members/justin-kusz) there!)
 
-This project is primarily an excuse for me to learn React Native, in a domain I happen to personally enjoy very much: hiking!
+This project was started primarily as an excuse for me to learn React Native, in a domain I happen to personally enjoy very much: hiking!
 
 ## Features
 
