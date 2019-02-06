@@ -12,7 +12,7 @@ MyTrails was inspired by [AllTrails](https://www.alltrails.com/), an app availab
 
 This project was started primarily as an excuse for me to learn React Native, in a domain I happen to personally enjoy very much: hiking!
 
-## Features
+### Features
 
 * Current:
 	* Hike recorder, including a map, showing the current hike time, distance, and pace, and a recording of the path taken drawn on the map
@@ -27,7 +27,7 @@ This project was started primarily as an excuse for me to learn React Native, in
 	* A way to search for hikes/trails in a given area
     
 
-## Screenshots
+### Screenshots
 
 Hike Recorder                                 | Save Recording                      | My Hikes
 --------------------------------------------- | ----------------------------------- | -----------------------------------------------
