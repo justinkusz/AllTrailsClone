@@ -24,11 +24,6 @@ class LoginForm extends Component {
         this.props.checkAuthenticationStatus();
     }
 
-    componentDidMount() {
-        this.props.emailChanged('justin.kusz@gmail.com');
-        this.props.passwordChanged('password');
-    }
-
     render() {
         return (
             <Card title={this.props.user ? 'Login Success!' : 'Log In'}>
