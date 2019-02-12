@@ -166,6 +166,12 @@ class Recorder extends React.Component {
         color: "#FFF"
       }
     };
+    
+    // Causing severe performance hit when running in Expo
+    if (__DEV__) {
+      return null;
+    }
+
     return (
       <Stopwatch
         start={this.props.recording}
