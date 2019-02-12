@@ -3,8 +3,8 @@ import {
   View,
   Text,
   FlatList,
-  TouchableWithoutFeedback,
-  ActivityIndicator
+  RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { Card } from "react-native-elements";
 import { connect } from "react-redux";
@@ -25,11 +25,21 @@ class Hikes extends React.Component {
 
     return (
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={this.props.loading}
+            onRefresh={this.onRefresh}
+          />
+        }
         data={hikes}
         renderItem={({ item: track }) => this.renderHikeCard(track)}
         keyExtractor={track => track.id}
       />
     );
+  };
+
+  onRefresh = () => {
+    this.props.fetchHikes();
   };
 
   onTapHikeCard = track => {
