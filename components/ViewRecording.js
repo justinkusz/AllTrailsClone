@@ -26,7 +26,7 @@ class ViewRecording extends React.Component {
     const distance =
       Number.parseFloat(track.stats.distance).toPrecision(2) + " km";
     const elevation =
-      Number.parseFloat(track.stats.elevation).toPrecision(2) + " m";
+      Number.parseFloat(track.stats.elevation).toPrecision(4) + " m";
     const time = this.msToTimeString(track.stats.time);
 
     return (
