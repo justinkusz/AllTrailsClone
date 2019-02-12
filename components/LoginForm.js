@@ -9,11 +9,16 @@ class LoginForm extends Component {
     constructor(props) {
         super(props);
 
+    let creds = {};
+    if (__DEV__) {
+      creds = require("../loginCreds.json");
+    }
+
         this.state = {
             showPassword: false,
             error: null,
-            email: null,
-            password: null,
+      email: creds.email || null,
+      password: creds.password || null,
             user: null,
             loading: false
         };
