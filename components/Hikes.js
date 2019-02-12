@@ -5,13 +5,13 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
-import { Card } from "react-native-elements";
 import { connect } from "react-redux";
 import { Actions } from "react-native-router-flux";
 
 import { fetchHikes, trackSelected } from "../actions";
-import StarRating from "./common/StarRating";
+import HikeCard from "./common/HikeCard";
 
 class Hikes extends React.Component {
   constructor(props) {
@@ -47,23 +47,11 @@ class Hikes extends React.Component {
     Actions.viewRecording();
   };
 
-  renderHikeCard = track => {
-    return (
-      <TouchableWithoutFeedback onPress={() => this.onTapHikeCard(track)}>
-        <Card
-          key={track.id}
-          image={{ uri: track.snapshotURL }}
-          imageProps={{ resizeMode: "cover" }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {track.title}
-          </Text>
-          <StarRating rating={track.rating} />
-          <Text>{track.stats.date}</Text>
-        </Card>
-      </TouchableWithoutFeedback>
-    );
-  };
+  renderHikeCard = track => (
+    <TouchableOpacity onPress={() => this.onTapHikeCard(track)}>
+      <HikeCard track={track} />
+    </TouchableOpacity>
+  );
 
   render() {
     if (this.props.loading) {
