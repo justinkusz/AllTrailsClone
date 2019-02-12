@@ -78,7 +78,9 @@ class LoginForm extends Component {
             name={this.state.showPassword ? "eye-off" : "eye"}
           />
         </View>
-        <FormValidationMessage>{this.state.errorPassword}</FormValidationMessage>
+        <FormValidationMessage>
+          {this.state.errorPassword}
+        </FormValidationMessage>
 
         <FormValidationMessage>{this.props.error}</FormValidationMessage>
 

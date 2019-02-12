@@ -8,7 +8,7 @@ import {
   StyleSheet
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { Stopwatch } from 'react-native-stopwatch-timer';
+import { Stopwatch } from "react-native-stopwatch-timer";
 import { connect } from "react-redux";
 import { Actions } from "react-native-router-flux";
 import { Location, Permissions, MapView, takeSnapshotAsync } from "expo";
@@ -27,13 +27,12 @@ import {
 const LOCATION_TASK_NAME = "background-location-task";
 
 class Recorder extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
-      locationEnabled: undefined,
-    }
+      locationEnabled: undefined
+    };
   }
 
   componentDidMount() {
@@ -49,9 +48,11 @@ class Recorder extends React.Component {
       accuracy: Location.Accuracy.Highest,
       distanceInterval: 10
     };
-    
-    Location.watchPositionAsync(options, (location) => this.props.locationChanged(location.coords));
-  }
+
+    Location.watchPositionAsync(options, location =>
+      this.props.locationChanged(location.coords)
+    );
+  };
 
   onPressStart = () => {
     const options = {
@@ -59,41 +60,49 @@ class Recorder extends React.Component {
       distanceInterval: 10
     };
 
-    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
-      if (!started) {
-        Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, options).then(() => {
-          this.props.recorderStarted();
-        });
-      } else {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
-          this.props.recorderStopped(this.props.locations);
-        });
+    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then(
+      started => {
+        if (!started) {
+          Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, options).then(
+            () => {
+              this.props.recorderStarted();
+            }
+          );
+        } else {
+          Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME).then(() => {
+            this.props.recorderStopped(this.props.locations);
+          });
+        }
       }
-    });
+    );
   };
 
   onPressDiscard = () => {
-    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
-      if (started) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then(
+      started => {
+        if (started) {
+          Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        }
       }
-    });
+    );
     this.props.recorderReset();
   };
 
   onPressSave = () => {
-    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then((started) => {
-      if (started) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+    Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME).then(
+      started => {
+        if (started) {
+          Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        }
       }
-    });
+    );
 
-    this.takeSnapshot().then((uri) => {
+    this.takeSnapshot().then(uri => {
       const recording = {
         locations: this.props.locations,
         snapshot: uri
       };
-      Actions.saveRecording({recording});
+      Actions.saveRecording({ recording });
     });
   };
 
@@ -145,25 +154,25 @@ class Recorder extends React.Component {
 
   renderTimer = () => {
     const options = {
-        container: {
-          alignItems: 'center',
-          backgroundColor: 'green',
-          padding: 5,
-          borderBottomRightRadius: 5,
-          borderBottomLeftRadius: 5
-        },
-        text: {
-          fontSize: 30,
-          color: '#FFF'
-        }
+      container: {
+        alignItems: "center",
+        backgroundColor: "green",
+        padding: 5,
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5
+      },
+      text: {
+        fontSize: 30,
+        color: "#FFF"
+      }
     };
     return (
-        <Stopwatch
-            start={this.props.recording}
-            reset={!this.props.recordingStarted}
-            options={options}
-            getTime={(time) => {}}
-        />
+      <Stopwatch
+        start={this.props.recording}
+        reset={!this.props.recordingStarted}
+        options={options}
+        getTime={time => {}}
+      />
     );
   };
 
@@ -235,7 +244,6 @@ class Recorder extends React.Component {
   };
 
   renderReactNativeMap = () => {
-
     return (
       <MapView
         ref={map => {
@@ -265,10 +273,10 @@ class Recorder extends React.Component {
   };
 
   checkForLocationServices = () => {
-    return Location.hasServicesEnabledAsync().then((enabled) => {
-      this.setState({locationEnabled: enabled});
+    return Location.hasServicesEnabledAsync().then(enabled => {
+      this.setState({ locationEnabled: enabled });
     });
-  }
+  };
 
   getCurrentLocation = () => {
     Permissions.askAsync(Permissions.LOCATION).then(result => {
@@ -282,7 +290,7 @@ class Recorder extends React.Component {
         });
       }
     });
-  }
+  };
 
   render() {
     if (!this.state.locationEnabled) {
@@ -294,14 +302,15 @@ class Recorder extends React.Component {
               flexDirection: "column",
               justifyContent: "space-around",
               alignContent: "center"
-            }}>
-            <Text style={{marginHorizontal: 10}}>
-              Location services must be turned on to record a hike.
-              Turn on location services, then tap anywhere to try again.
+            }}
+          >
+            <Text style={{ marginHorizontal: 10 }}>
+              Location services must be turned on to record a hike. Turn on
+              location services, then tap anywhere to try again.
             </Text>
           </View>
         </TouchableWithoutFeedback>
-      )
+      );
     }
 
     const long = this.props.coords.longitude;

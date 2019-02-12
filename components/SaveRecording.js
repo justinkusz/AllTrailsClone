@@ -1,10 +1,16 @@
 import React from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Card, Rating, FormLabel, FormInput, Button } from "react-native-elements";
+import {
+  Card,
+  Rating,
+  FormLabel,
+  FormInput,
+  Button
+} from "react-native-elements";
 import { Actions } from "react-native-router-flux";
-import { connect } from 'react-redux';
-import { saveRecording, updateLifetimeStats } from '../lib/Recording';
-import { hikeAdded, statsChanged, recorderReset } from '../actions';
+import { connect } from "react-redux";
+import { saveRecording, updateLifetimeStats } from "../lib/Recording";
+import { hikeAdded, statsChanged, recorderReset } from "../actions";
 
 class SaveRecording extends React.Component {
   constructor(props) {
@@ -48,7 +54,9 @@ class SaveRecording extends React.Component {
           </FormInput>
 
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            {this.state.loading ? this.renderLoading() : this.renderSaveButton()}
+            {this.state.loading
+              ? this.renderLoading()
+              : this.renderSaveButton()}
           </View>
         </Card>
       </View>
@@ -56,8 +64,8 @@ class SaveRecording extends React.Component {
   }
 
   renderLoading = () => {
-    return <ActivityIndicator size="large" color="green"/>
-  }
+    return <ActivityIndicator size="large" color="green" />;
+  };
 
   renderSaveButton = () => {
     return (
@@ -66,8 +74,8 @@ class SaveRecording extends React.Component {
         title="Save"
         onPress={this.onSaveRecording}
       />
-    )
-  }
+    );
+  };
 
   onChangeTitle = title => {
     this.setState({ title });
@@ -93,17 +101,19 @@ class SaveRecording extends React.Component {
       snapshot
     };
 
-    this.setState({loading: true});
+    this.setState({ loading: true });
 
-    saveRecording(recording).then((track) => {
+    saveRecording(recording).then(track => {
       this.props.hikeAdded(track);
-      updateLifetimeStats(track.stats).then((stats) => {
-        this.props.statsChanged(stats);
-      }).then(() => {
-        this.props.recorderReset();
-        Actions.reset("home");
-        Actions.jump("myHikes");
-      });
+      updateLifetimeStats(track.stats)
+        .then(stats => {
+          this.props.statsChanged(stats);
+        })
+        .then(() => {
+          this.props.recorderReset();
+          Actions.reset("home");
+          Actions.jump("myHikes");
+        });
     });
   };
 }
@@ -115,4 +125,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(undefined, {hikeAdded, statsChanged, recorderReset})(SaveRecording);
+export default connect(
+  undefined,
+  { hikeAdded, statsChanged, recorderReset }
+)(SaveRecording);

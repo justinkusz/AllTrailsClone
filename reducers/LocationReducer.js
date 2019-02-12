@@ -1,14 +1,14 @@
-import { LOCATION_CHANGED } from '../actions/types';
+import { LOCATION_CHANGED } from "../actions/types";
 
 const INITIAL_STATE = {
-    coords: ''
+  coords: ""
 };
 
 export default (state = INITIAL_STATE, action) => {
-    switch (action.type) {
-        case LOCATION_CHANGED:
-            return { ...state, coords: action.payload };
-        default:
-            return state;
-    };
+  switch (action.type) {
+    case LOCATION_CHANGED:
+      return { ...state, coords: action.payload };
+    default:
+      return state;
+  }
 };
