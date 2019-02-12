@@ -1,24 +1,15 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { Card } from "react-native-elements";
-import StarRating from "./common/StarRating";
 import { connect } from "react-redux";
+
+import StarRating from "./common/StarRating";
+import { msToTimeString } from "../lib/Conversions";
 
 class ViewRecording extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  msToTimeString = duration => {
-    const seconds = Math.floor(duration / 1000) % 60;
-    const minutes = Math.floor(duration / (1000 * 60)) % 60;
-    const hours = Math.floor(duration / (1000 * 60 * 60)) % 24;
-    const days = Math.floor(duration / (1000 * 60 * 60 * 24));
-
-    const D = days > 0 ? days + " days, " : "";
-
-    return D + hours + ":" + minutes + ":" + seconds;
-  };
 
   render() {
     const { track } = this.props;
@@ -27,7 +18,7 @@ class ViewRecording extends React.Component {
       Number.parseFloat(track.stats.distance).toPrecision(2) + " km";
     const elevation =
       Number.parseFloat(track.stats.elevation).toPrecision(4) + " m";
-    const time = this.msToTimeString(track.stats.time);
+    const time = msToTimeString(track.stats.time);
 
     return (
       <ScrollView>

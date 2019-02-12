@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { Card } from "react-native-elements";
 import { connect } from "react-redux";
+import { Actions } from "react-native-router-flux";
+
 import { fetchHikes, trackSelected } from "../actions";
 import StarRating from "./common/StarRating";
-import { Actions } from "react-native-router-flux";
 
 class Hikes extends React.Component {
   constructor(props) {
@@ -18,25 +19,6 @@ class Hikes extends React.Component {
 
     this.props.fetchHikes();
   }
-
-  msToTimeString = duration => {
-    const seconds = Math.floor(duration / 1000) % 60;
-    const minutes = Math.floor(duration / (1000 * 60)) % 60;
-    const hours = Math.floor(duration / (1000 * 60 * 60)) % 24;
-    const days = Math.floor(duration / (1000 * 60 * 60 * 24));
-
-    const D = days > 0 ? days + " days, " : "";
-
-    return D + hours + ":" + minutes + ":" + seconds;
-  };
-
-  mToDistanceString = distance => {
-    if (distance > 1000) {
-      return Number.parseFloat(distance).toPrecision(2) + " km";
-    } else {
-      return Number.parseFloat(distance).toPrecision(2) + " m";
-    }
-  };
 
   renderHikes = () => {
     const hikes = this.props.tracks;
@@ -56,10 +38,6 @@ class Hikes extends React.Component {
   };
 
   renderHikeCard = track => {
-    // const time = this.msToTimeString(track.stats.time);
-    // const distance = Number.parseFloat(track.stats.distance).toPrecision(2) + ' km';
-    // const elevation = Math.floor(track.stats.elevation) + ' m';
-
     return (
       <TouchableWithoutFeedback onPress={() => this.onTapHikeCard(track)}>
         <Card

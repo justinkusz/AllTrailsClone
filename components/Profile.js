@@ -3,30 +3,18 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Avatar, Card } from 'react-native-elements';
 import { connect } from 'react-redux';
 
+import { msToTimeString } from "../lib/Conversions";
+
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-    }
-
-    msToTimeString = (duration) => {
-        const seconds = Math.floor((duration / 1000)) % 60;
-        const minutes = Math.floor((duration / (1000 * 60))) % 60;
-        const hours = Math.floor((duration / (1000 * 60 * 60))) % 24;
-        const days = Math.floor((duration / (1000 * 60 * 60 * 24)));
-        
-        const D = (days > 0) ? days + ' days ' : '';
-        const H = (hours > 0) ? hours + ' hr ' : '';
-        const M = (minutes > 0) ? minutes + ' min ' : '';
-        const S = (seconds > 0) ? seconds + ' sec' : '';
-
-        return D + H + M + S;
     }
 
     renderStatsCard = () => {
         const hikes = this.props.userStats.hikes;
         const distance = Number.parseFloat(this.props.userStats.distance).toPrecision(2) + ' km';
         const elevation = Number.parseInt(this.props.userStats.elevation) + ' m';
-        const time = this.msToTimeString(this.props.userStats.time);
+        const time = msToTimeString(this.props.userStats.time);
 
         return (
             <Card title='Lifetime Stats'>
