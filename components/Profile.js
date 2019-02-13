@@ -1,13 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Avatar, Card } from "react-native-elements";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { Avatar, Card, Button } from "react-native-elements";
 import { connect } from "react-redux";
 
+import { logoutUser } from "../actions";
 import { msToTimeString } from "../lib/Conversions";
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loading: false
+    };
   }
 
   renderStatsCard = () => {
@@ -52,11 +57,37 @@ class Profile extends React.Component {
             </Text>
           </View>
         </View>
+        <View style={{ paddingTop: 10 }}>{this.renderLogoutButton()}</View>
       </Card>
     );
   };
 
+  onLogoutPress = () => {
+    this.setState({
+      loading: true
+    }, () => {
+      this.props.logoutUser()
+    });
+  };
+
+  renderLogoutButton = () => {
+    return (
+      <Button
+        title="Logout"
+        backgroundColor="green"
+        onPress={this.onLogoutPress}
+      />
+    );
+  };
+
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" color="green" animating={true} />
+        </View>
+      );
+    }
     return (
       <View>
         {this.renderUserInfoCard()}
@@ -92,4 +123,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(Profile);

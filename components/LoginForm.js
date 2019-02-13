@@ -40,6 +40,14 @@ class LoginForm extends Component {
   }
 
   render() {
+    if (this.props.loading) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          {this.renderActivityIndicator()}
+        </View>
+      );
+    }
+
     return (
       <Card title={this.props.user ? "Login Success!" : "Log In"}>
         <FormLabel>Email</FormLabel>

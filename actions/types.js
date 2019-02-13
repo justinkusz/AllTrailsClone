@@ -4,6 +4,7 @@ export const PASSWORD_CHANGED = "password_changed";
 export const LOGIN_ATTEMPTED = "login_attempted";
 export const LOGIN_USER_SUCCESS = "login_user_success";
 export const LOGIN_USER_FAIL = "login_user_fail";
+export const LOGOUT_USER = "logout_user";
 
 // Profile actions
 export const FIRST_NAME_CHANGED = "first_name_changed";

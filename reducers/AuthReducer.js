@@ -4,6 +4,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_ATTEMPTED,
   LOGIN_USER_FAIL,
+  LOGOUT_USER,
   PROFILE_PIC_CHANGED
 } from "../actions/types";
 
@@ -29,7 +30,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: false, error: action.payload };
     case PROFILE_PIC_CHANGED:
       return { ...state, avatar: action.payload };
-
+    case LOGOUT_USER:
+      return INITIAL_STATE;
     default:
       return state;
   }

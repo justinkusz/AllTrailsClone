@@ -7,6 +7,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_ATTEMPTED,
   LOGIN_USER_FAIL,
+  LOGOUT_USER,
   STATS_CHANGED
 } from "./types";
 
@@ -19,11 +20,15 @@ export const emailChanged = text => {
 
 export const checkAuthenticationStatus = () => {
   return dispatch => {
-    const user = firebase.auth().currentUser;
+    loginAttempted(dispatch);
 
-    if (user) {
-      loginSuccess(dispatch, user);
-    }
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        loginSuccess(dispatch, user);
+      } else {
+        loginFail(dispatch, undefined);
+      }
+    });
   };
 };
 
@@ -95,6 +100,21 @@ const initializeUser = (dispatch, user) => {
       payload: userData.stats
     });
   });
+};
+
+export const logoutUser = () => {
+
+  return dispatch => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        Actions.reset("auth");
+        dispatch({
+          type: LOGOUT_USER
+        });
+      });
+  };
 };
 
 export const loginUser = ({ email, password }) => {
