@@ -28,8 +28,8 @@ class LoginForm extends Component {
       errorEmail: null,
       errorPassword: null,
       error: null,
-      email: creds.email || null,
-      password: creds.password || null,
+      email: creds.email || "",
+      password: creds.password || "",
       user: null,
       loading: false
     };
