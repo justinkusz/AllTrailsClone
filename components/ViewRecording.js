@@ -54,10 +54,18 @@ class ViewRecording extends React.Component {
           </View>
         </Card>
 
-        <Card title="Photos" />
+        {this.renderPhotos()}
       </ScrollView>
     );
   }
+
+  renderPhotos = () => {
+    if (!this.props.photos) {
+      return null;
+    }
+
+    return <Card title="Photos" />;
+  };
 }
 
 const mapStateToProps = state => {
