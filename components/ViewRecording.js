@@ -12,13 +12,17 @@ class ViewRecording extends React.Component {
   }
 
   render() {
-    const { track } = this.props;
-    const { id, snapshotURL, rating, stats } = track;
-    const distance =
-      Number.parseFloat(track.stats.distance).toPrecision(2) + " km";
-    const elevation =
-      Number.parseFloat(track.stats.elevation).toPrecision(4) + " m";
-    const time = msToTimeString(track.stats.time);
+    const {
+      id,
+      snapshotURL,
+      rating,
+      stats,
+      title,
+      description
+    } = this.props.track;
+    const distance = Number.parseFloat(stats.distance).toPrecision(2) + " km";
+    const elevation = Number.parseFloat(stats.elevation).toPrecision(4) + " m";
+    const time = msToTimeString(stats.time);
 
     return (
       <ScrollView>
@@ -27,15 +31,13 @@ class ViewRecording extends React.Component {
           image={{ uri: snapshotURL }}
           imageProps={{ resizeMode: "cover" }}
         >
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            {track.title}
-          </Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{title}</Text>
           <Text>{stats.date}</Text>
           <StarRating rating={rating} />
         </Card>
 
         <Card title="Description">
-          <Text>{track.description}</Text>
+          <Text>{description}</Text>
         </Card>
 
         <Card title="Stats">
