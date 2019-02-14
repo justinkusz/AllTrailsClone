@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, BackHandler } from "react-native";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
+import { Actions } from "react-native-router-flux";
 import ReduxThunk from "redux-thunk";
 import combineReducers from "./reducers";
 import RouterComponent from "./RouterComponent";
@@ -32,6 +33,12 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 export default class App extends React.Component {
   componentWillMount() {
     firebase.initializeApp(firebaseConfig);
+  }
+
+  componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      Actions.pop();
+    });
   }
 
   render() {
